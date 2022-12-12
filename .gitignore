@@ -1,0 +1,10 @@
+# IDE
+.idea
+.vscode
+.cert
+.DS_Store
+*.iml
+
+# Dependencies
+node_modules
+
