@@ -5,6 +5,8 @@
 .DS_Store
 *.iml
 
-# Dependencies
-node_modules
+# Yarn
+yarn-error.log
 
+# Test
+coverage
