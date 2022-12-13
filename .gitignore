@@ -6,7 +6,13 @@
 *.iml
 
 # Yarn
+node_modules
 yarn-error.log
+
+# Typescript
+**/*.js
+!dist/**/*.js
 
 # Test
 coverage
+jira.test.ts

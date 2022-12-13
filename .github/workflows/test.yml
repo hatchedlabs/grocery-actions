@@ -18,4 +18,4 @@ jobs:
           node-version: "16.x"
 
       - name: Install Dependencies and Run Tests/Coverage
-        run: yarn && yarn ci
+        run: yarn && yarn build && yarn ci
