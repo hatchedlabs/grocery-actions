@@ -30,7 +30,7 @@ runs:
             echo "##[set-output name=name;]$(echo ${GITHUB_HEAD_REF} | grep -Eo '[aA-zZ]+-[0-9]+' | tr '[:lower:]' '[:upper:]')"
           fi 
         id: issue_name
-      - name: Test
+      - name: Output Issue Name
         shell: bash
         run: |
           echo "issuename: ${{steps.issue_name.outputs.name}}"
@@ -58,3 +58,4 @@ runs:
 branding:
   icon: 'check-circle'  
   color: 'orange'
+  
