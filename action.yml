@@ -19,7 +19,7 @@ runs:
         shell: bash
         run: |
           echo "${GITHUB_HEAD_REF}"
-          echo "hlinfr-152-jirastatus-action" | grep -Eo "[aA-zZ]+-[0-9]+" | tr '[:lower:]' '[:upper:]'
+          grep -Eo "[aA-zZ]+-[0-9]+" | tr '[:lower:]' '[:upper:]'
       - name: Extract Issue name
         shell: bash
         run: |
