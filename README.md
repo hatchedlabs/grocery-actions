@@ -9,8 +9,8 @@ This is the repository for Grocery App
 This action checks 
 - if the PR Title includes the Jira Key (Ex: JIRA-123)
 - if the PR Body includes the Jira Link. Ex:
-  - https://gianteagle.atlassian.net/jira/software/c/projects/JIRA/boards/60?modal=detail&selectedIssue=JIRA-123
-  - https://gianteagle.atlassian.net/browse/JIRA-123
+  - https://COMPANY.atlassian.net/jira/software/c/projects/JIRA/boards/60?modal=detail&selectedIssue=JIRA-123
+  - https://COMPANY.atlassian.net/browse/JIRA-123
 
 ### Example Usage
 
