@@ -1,0 +1,60 @@
+name: 'Jira Check Issue Status'
+description: 'check the Jira issue status'
+author: 'Michael Hakim'
+inputs:
+  organization-name: 
+    description: 'The name of the organization on Jira'
+    required: true
+    default: 'gianteagle'
+  jira-token:  
+    description: 'Jira Token'
+    required: true
+  jira-user:
+    description: 'Jira User'
+    required: false
+runs:
+  using: "composite"
+  steps:
+      - name: First Step
+        shell: bash
+        run: |
+          echo "${GITHUB_HEAD_REF}"
+          echo "hlinfr-152-jirastatus-action" | grep -Eo "[aA-zZ]+-[0-9]+" | tr '[:lower:]' '[:upper:]'
+      - name: Extract Issue name
+        shell: bash
+        run: |
+          if [[ "$(echo ${GITHUB_HEAD_REF} | cut -d "/" -f1)" =~ (feature|hotfix|bugfix) && ! "$(echo ${GITHUB_HEAD_REF} | cut -d "/" -f2)" =~ [A-Z]+-[0-9]+ ]]; then
+            echo "Your PR is not connected to an issue on Jira, please create an issue for it."
+            exit 1
+          else
+            echo "##[set-output name=name;]$(echo ${GITHUB_HEAD_REF} | grep -Eo '[aA-zZ]+-[0-9]+' | tr '[:lower:]' '[:upper:]')"
+          fi 
+        id: issue_name
+      - name: Test
+        shell: bash
+        run: |
+          echo "issuename: ${{steps.issue_name.outputs.name}}"
+      - name: Get Issue Status
+        shell: bash
+        run: |
+          Response=$(curl \
+          -s \
+          --location \
+          --header 'Accept: application/json' \
+          --user ${{ inputs.jira-token }} \
+          --request GET \
+          "https://${{ inputs.organization-name }}.atlassian.net/rest/api/3/issue/${{steps.issue_name.outputs.name}}?fields=status")
+           echo ${Response}
+           echo "##[set-output name=status;]$(echo $Response | jq '.fields.status.name')"
+           echo $Response | jq '.fields.status.name'
+        id: issue_status
+      - name: Try to fail
+        shell: bash
+        run: |
+          if [[ ! ${{steps.issue_status.outputs.status}} =~ "In Progress" ]]; then
+            echo "Your issue on JIRA still not Active."
+            exit 1
+          fi 
+branding:
+  icon: 'check-circle'  
+  color: 'orange'
