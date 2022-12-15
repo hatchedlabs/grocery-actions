@@ -18,6 +18,17 @@ This action checks
 - uses: hatchedlabs/grocery-actions/jira-ticket-check@main
 ```
 
+## Jira Status Check
+
+This action checks 
+- Jira Ticket Status (Ex: In Progress)
+- if the Jira Ticket status matches the status you define in your own repo (Ex: Devops Repo check for In Progress)
+
+### Example Usage
+
+```yaml
+- uses: hatchedlabs/grocery-actions/jira-status-check@main
+```
 
 ## Jira Move Unreleased
 
