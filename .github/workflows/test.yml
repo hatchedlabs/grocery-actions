@@ -1,0 +1,21 @@
+name: Unit Tests
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Jest Unit Test Run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+
+      - name: Install Dependencies and Run Tests/Coverage
+        run: yarn && yarn ci
