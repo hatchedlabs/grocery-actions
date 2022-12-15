@@ -27,7 +27,7 @@ This action checks
 ### Example Usage
 
 ```yaml
-- uses: hatchedlabs/grocery-actions@main
+- uses: hatchedlabs/grocery-actions/jira-status-check@main
 ```
 
 
