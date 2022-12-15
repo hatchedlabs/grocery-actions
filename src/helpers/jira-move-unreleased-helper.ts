@@ -35,29 +35,18 @@ export async function run() {
       return
     }
 
-    try {
-      const jira = new JiraApiHelper()
-      const issue = await jira.client.findIssue(jiraKey)
-      const projectKey = issue.fields.project.key
-      core.info(`Title: ${issue.fields.summary}`)
-      core.info(`Project: ${projectKey}`)
+    const jira = new JiraApiHelper()
+    const issue = await jira.client.findIssue(jiraKey)
+    const projectKey = issue.fields.project.key
+    core.info(`Title: ${issue.fields.summary}`)
+    core.info(`Project: ${projectKey}`)
 
-      // Create Unreleased Version if not Exist
-      const version = await jira.createVersion(
-        projectKey,
-        unreleasedVersionName
-      )
+    // Create Unreleased Version if not Exist
+    const version = await jira.createVersion(projectKey, unreleasedVersionName)
 
-      await jira.updateIssueVersion(issue.key, version.name)
-      
-    } catch (e) {
-      if (e instanceof Error) {
-        core.error(e as Error)
-        core.setFailed(e.message)
-      } else {
-        core.error("Unexpected Jira Error Occurred")
-      }
-    }
+    // Update Fix Version of Jira Issue to Unreleased Version Name
+    await jira.updateIssueVersion(issue.key, version.name)
+
   } catch (e) {
     if (e instanceof Error) {
       core.error(e as Error)
