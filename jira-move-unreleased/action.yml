@@ -1,0 +1,25 @@
+name: Jira Move To Unreleased Version
+description: Moves Jira Tickets to Unreleased Version on merge
+author: Github
+inputs:
+  jira-server-url: 
+    description: Jira Server Url
+    required: true
+  jira-user-email:
+    description: Jira User Email for API calls
+    required: true
+  jira-api-token:
+    description: Jira User API Token for API calls
+    required: true
+  github-token:
+    description: Github Token to check the merged PR title/body
+    required: true
+  platform:
+    description: Platform of the app. Such as Android, IOS, Web, etc
+    required: true
+  service:
+    description: Name of service. Such as Grocery
+    required: true
+runs:
+  using: node16
+  main: ../dist/jira-move-unreleased.js

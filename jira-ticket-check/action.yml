@@ -1,6 +1,6 @@
 name: Jira Ticket Check
 description: Checks the PR Title and Body for the Jira Ticket
-author: "GitHub"
+author: GitHub
 runs:
   using: node16
-  main: ../lib/jira-ticket-check.js
+  main: ../dist/jira-ticket-check.js
