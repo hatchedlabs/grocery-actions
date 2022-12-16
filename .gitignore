@@ -15,4 +15,4 @@ yarn-error.log
 
 # Test
 coverage
-jira.test.ts
+manual.test.ts

@@ -4,7 +4,7 @@ import JiraApi from "jira-client"
 const issueJson = {
   key: "TEST-123",
   fields: {
-    summary: "SOMETHING",
+    summary: "This Is A Test",
     project: {
       key: "TEST"
     }

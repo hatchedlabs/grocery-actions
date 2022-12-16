@@ -6,7 +6,7 @@ import {
 } from "../github/github.js"
 import JiraApiHelper from "../jira/jira.js"
 
-export async function getJiraKeyFromPullRequest() {
+export async function getJiraKeyFromPullRequest(): Promise<string | null> {
   // Grab the Merged Pull Request if Exists
   const pull = await getMergedPullRequest(
     github.context.repo.owner,
@@ -15,11 +15,11 @@ export async function getJiraKeyFromPullRequest() {
   )
 
   if (!pull) {
-    core.info("Pull Request Not Found with most recent push")
+    core.info("Pull Request Not Found with Most Recent Push")
     return null
   }
 
-  core.info(`Pull: ${JSON.stringify(pull, null, 2)}`)
+  core.info(`Commit Pull Request Found: ${JSON.stringify(pull, null, 2)}`)
   return extractJiraKeysFromPull(pull)
 }
 
@@ -38,8 +38,8 @@ export async function run() {
     const jira = new JiraApiHelper()
     const issue = await jira.client.findIssue(jiraKey)
     const projectKey = issue.fields.project.key
-    core.info(`Title: ${issue.fields.summary}`)
-    core.info(`Project: ${projectKey}`)
+    core.info(`Jira Issue Key: ${issue.key}`)
+    core.info(`Jira Title: ${issue.fields.summary}`)
 
     // Create Unreleased Version if not Exist
     const version = await jira.createVersion(projectKey, unreleasedVersionName)
