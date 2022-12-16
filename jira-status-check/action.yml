@@ -18,8 +18,7 @@ runs:
       - name: First Step
         shell: bash
         run: |
-          echo "${GITHUB_HEAD_REF}"
-          grep -Eo "[aA-zZ]+-[0-9]+" | tr '[:lower:]' '[:upper:]'
+          echo "${GITHUB_HEAD_REF}" | grep -Eo "[aA-zZ]+-[0-9]+" | tr '[:lower:]' '[:upper:]'
       - name: Extract Issue name
         shell: bash
         run: |
