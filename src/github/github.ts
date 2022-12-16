@@ -24,8 +24,6 @@ export async function getMergedPullRequest(owner: string, repo: string, sha: str
     title: pull.title,
     body: pull.body,
     number: pull.number,
-    labels: pull.labels.map((l) => l.name),
-    assignees: pull.assignees!.map((a) => a.login)
   }
 }
 

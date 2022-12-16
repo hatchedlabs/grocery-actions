@@ -30,7 +30,7 @@ describe("jira-move-unreleased", function () {
 
   describe("run", function () {
     it("should not fail", function () {
-      mockOctokit({})
+      mockOctokit({pullRequestTitle: "TEST-123"})
       github.context.sha = "sha"
       run()
     })

@@ -32,10 +32,10 @@ export default class JiraApiHelper {
     const version = await this.getProjectVersionByName(project, name)
     if (!version) {
       const createdVersion = await this.client.createVersion({ project, name })
-      core.info(`Created Version ${name} in ${project}`)
+      core.info(`Created Version '${name}' in '${project}'`)
       return createdVersion
     }
-    core.info(`Version ${name} Already Exists in ${project}`)
+    core.info(`Version '${name}' Already Exists in '$'{project}'`)
     return version
   }
 
@@ -45,6 +45,6 @@ export default class JiraApiHelper {
     await this.client.updateIssue(issueKey, {
       fields: { fixVersions: [{ name: versionName }] }
     })
-    core.info(`Updated ${issueKey} to Fix Version ${versionName}`)
+    core.info(`Updated '${issueKey}' to Fix Version '${versionName}'`)
   }
 }
