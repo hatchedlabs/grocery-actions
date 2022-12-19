@@ -45,9 +45,7 @@ runs:
           "https://${{ inputs.organization-name }}.atlassian.net/rest/api/3/issue/${{steps.issue_name.outputs.name}}?fields=status")
            echo ${Response}
            echo "##[set-output name=status;]$(echo $Response | jq '.fields.status.name')"
-           echo "After this step"
            echo $Response | jq '.fields.status.name'
-           echo "After this step 2"
         id: issue_status
       - name: Try to fail
         shell: bash
