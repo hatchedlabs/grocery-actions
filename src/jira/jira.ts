@@ -39,12 +39,38 @@ export default class JiraApiHelper {
     return version
   }
 
-  // Future Update: Could update to merge versions instead of overwriting the version
-  // Ex: Grab existing fix versions and append the new versionName
-  async updateIssueVersion(issueKey: string, versionName: string) {
+  async updateIssueVersion(
+    issueKey: string,
+    versionName: string,
+    replace: boolean = false
+  ) {
+    let issueVersions: any[] = []
+
+    if (replace) {
+      // Replace fixVersion instead of appending to the fixVersion field
+      issueVersions = [{ name: versionName }]
+    } else {
+      const issue = await this.client.findIssue(issueKey)
+      issueVersions = issue.fields.fixVersions.map((v: any) => {
+        return { name: v.name }
+      })
+      if (issueVersions.some((v: any) => v.name === versionName)) {
+        core.info(`Fix Version '${versionName}' exists in '${issueKey}'`)
+        return
+      }
+      issueVersions.push({ name: versionName })
+    }
+
     await this.client.updateIssue(issueKey, {
-      fields: { fixVersions: [{ name: versionName }] }
+      fields: { fixVersions: issueVersions }
     })
-    core.info(`Updated '${issueKey}' to Fix Version '${versionName}'`)
+    core.info(
+      `Updated '${issueKey}' with fixVersions:\n${JSON.stringify(
+        issueVersions,
+        null,
+        2
+      )}`
+    )
+    return issueVersions
   }
 }
