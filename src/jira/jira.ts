@@ -35,7 +35,7 @@ export default class JiraApiHelper {
       core.info(`Created Version '${name}' in '${project}'`)
       return createdVersion
     }
-    core.info(`Version '${name}' Already Exists in '$'{project}'`)
+    core.info(`Version '${name}' Already Exists in '${project}'`)
     return version
   }
 

@@ -2,41 +2,6 @@ import { beforeAll, describe, expect, it } from "@jest/globals"
 import JiraApi from "jira-client"
 import JiraApiHelper from "../src/jira/jira.js"
 
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toContainObject(): CustomMatcherResult
-    }
-  }
-}
-
-expect.extend({
-  toContainObject(received, argument) {
-    const pass = this.equals(
-      received,
-      expect.arrayContaining([expect.objectContaining(argument)])
-    )
-
-    if (pass) {
-      return {
-        message: () =>
-          `expected ${this.utils.printReceived(
-            received
-          )} not to contain object ${this.utils.printExpected(argument)}`,
-        pass: true
-      }
-    } else {
-      return {
-        message: () =>
-          `expected ${this.utils.printReceived(
-            received
-          )} to contain object ${this.utils.printExpected(argument)}`,
-        pass: false
-      }
-    }
-  }
-})
-
 describe("JiraApiHelper", function () {
   let jira: JiraApiHelper
 

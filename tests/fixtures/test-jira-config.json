@@ -1,0 +1,6 @@
+{
+  "serviceFolderMap": {
+    "testFolder": "test",
+    "jiraFolder": "jira"
+  }
+}
