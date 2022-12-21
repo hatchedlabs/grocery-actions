@@ -28,31 +28,21 @@ export async function run() {
   const service = core.getInput("service")
   const unreleasedVersionName = `[Unreleased] ${service} ${platform}`
 
-  try {
-    const jiraKey = await getJiraKeyFromPullRequest()
-    if (!jiraKey) {
-      core.info("No Jira Key or Pull Request Associated with Commit")
-      return
-    }
-
-    const jira = new JiraApiHelper()
-    const issue = await jira.client.findIssue(jiraKey)
-    const projectKey = issue.fields.project.key
-    core.info(`Jira Issue Key: ${issue.key}`)
-    core.info(`Jira Title: ${issue.fields.summary}`)
-
-    // Create Unreleased Version if not Exist
-    const version = await jira.createVersion(projectKey, unreleasedVersionName)
-
-    // Update Fix Version of Jira Issue to Unreleased Version Name
-    await jira.updateIssueVersion(issue.key, version.name)
-
-  } catch (e) {
-    if (e instanceof Error) {
-      core.error(e as Error)
-      core.setFailed(e.message)
-    } else {
-      core.error("Unexpected Error Occurred")
-    }
+  const jiraKey = await getJiraKeyFromPullRequest()
+  if (!jiraKey) {
+    core.info("No Jira Key or Pull Request Associated with Commit")
+    return
   }
+
+  const jira = new JiraApiHelper()
+  const issue = await jira.client.findIssue(jiraKey)
+  const projectKey = issue.fields.project.key
+  core.info(`Jira Issue Key: ${issue.key}`)
+  core.info(`Jira Title: ${issue.fields.summary}`)
+
+  // Create Unreleased Version if not Exist
+  const version = await jira.createVersion(projectKey, unreleasedVersionName)
+
+  // Update Fix Version of Jira Issue to Unreleased Version Name
+  await jira.updateIssueVersion(issue.key, version.name)
 }

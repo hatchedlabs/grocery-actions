@@ -7,7 +7,8 @@ const issueJson = {
     summary: "This Is A Test",
     project: {
       key: "TEST"
-    }
+    },
+    fixVersions: []
   }
 }
 
