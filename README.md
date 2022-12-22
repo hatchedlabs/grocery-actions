@@ -39,6 +39,20 @@ This action
   - Will ignore creation if version already exists
 - Moves the Jira Issue to that created Version
 
+If `service` is not set, then it will look for a config file.
+
+The config file is in the format of:
+```json
+{
+  "serviceFolderMap": {
+    "rootLevelFolder": "Service"
+  }
+}
+```
+
+This allows the action to work with monorepos with multiple services. This can be paired with the `tj-actions/changed-files@v35` action, which
+finds changed files in the most recent commit. Then from there, it can create multiple releases and append them onto the related Jira issue. 
+
 ### Example Usage
 
 ```yaml
@@ -49,7 +63,35 @@ This action
     jira-api-token: ${{ secrets.JIRA_API_TOKEN }}
     github-token: ${{ secrets.REPO_TOKEN }}
     platform: PLATFORM
-    service: SERVICE
+    service: SERVICE 
+```
+
+#### Monorepo Example
+```json
+{
+  "serviceFolderMap": {
+    "rootLevelFolder": "Service"
+  }
+}
+```
+```yaml
+- uses: actions/checkout@v3
+  with:
+    fetch-depth: 0
+- name: Get changed files
+  id: changed-files
+  uses: tj-actions/changed-files@v35
+  
+- name: Run Jira Unreleased
+  uses: hatchedlabs/grocery-actions/jira-move-unreleased@main
+  with:
+    jira-server-url: gianteagle.atlassian.net
+    jira-user-email: auto-infrastructure@hatchedlabs.com
+    jira-api-token: ${{ secrets.JIRA_API_TOKEN }}
+    github-token: ${{ secrets.REPO_TOKEN }}
+    platform: Android
+    config-file-path: ./.github/workflows/jira-action-config.json
+    changed-files: ${{ steps.changed-files.outputs.all_changed_files }}
 ```
 
 > Note: The Jira API Token needs to access to all Jira Projects that this action is added to.

@@ -20,6 +20,12 @@ inputs:
   service:
     description: Name of service. Such as Grocery
     required: true
+  config-file-path:
+    description: Path to config file
+    required: true
+  changed-files:
+    description: Changed files separated by a space
+
 runs:
   using: node16
   main: ../dist/jira-move-unreleased.js
