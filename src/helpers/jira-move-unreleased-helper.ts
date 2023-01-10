@@ -88,7 +88,7 @@ export async function run() {
 
   const jiraKey = await getJiraKeyFromPullRequest()
   if (!jiraKey) {
-    core.setFailed("No Jira Key or Pull Request Associated with Commit")
+    core.info("No Jira Key or Pull Request Associated with Commit")
     return
   }
 
