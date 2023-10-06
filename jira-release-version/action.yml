@@ -1,0 +1,25 @@
+name: Jira Release Version
+description: Jira Release Version
+author: Github
+inputs:
+  jira-server-url: 
+    description: Jira Server Url
+    required: true
+  jira-user-email:
+    description: Jira User Email for API calls
+    required: true
+  jira-api-token:
+    description: Jira User API Token for API calls
+    required: true
+  github-token:
+    description: Github Token to check the merged PR title/body
+    required: true
+  platform:
+    description: Platform of the app. Such as Android, IOS, Web, etc
+    required: true
+  service:
+    description: Name of service. Such as Grocery.
+
+runs:
+  using: node16
+  main: ../dist/jira-release-version.js

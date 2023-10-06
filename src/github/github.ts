@@ -5,8 +5,12 @@ export function getGithubClient() {
   return github.getOctokit(core.getInput("github-token"))
 }
 
-export async function getMergedPullRequest(owner: string, repo: string, sha: string) {
-  const resp = await getGithubClient().rest.pulls.list({
+export async function getMergedPullRequest(
+  owner: string,
+  repo: string,
+  sha: string
+) {
+  const { data } = await getGithubClient().rest.pulls.list({
     owner,
     repo,
     sort: "updated",
@@ -15,7 +19,7 @@ export async function getMergedPullRequest(owner: string, repo: string, sha: str
     per_page: 100
   })
 
-  const pull = resp.data.find((p) => p.merge_commit_sha === sha)
+  const pull = data.find((p) => p.merge_commit_sha === sha)
   if (!pull) {
     return null
   }
@@ -23,8 +27,60 @@ export async function getMergedPullRequest(owner: string, repo: string, sha: str
   return {
     title: pull.title,
     body: pull.body,
-    number: pull.number,
+    number: pull.number
   }
+}
+
+export async function getPullRequest(
+  owner: string,
+  repo: string,
+  pull_number: number
+) {
+  const { data: pullRequest } = await getGithubClient().rest.pulls.get({
+    owner,
+    repo,
+    pull_number
+  })
+
+  if (!pullRequest) {
+    core.info(`\tNo Pull Request for ${owner}, ${repo}, ${pull_number}`)
+    return null
+  }
+
+  return {
+    title: pullRequest.title,
+    body: pullRequest.body,
+    number: pullRequest.number
+  }
+}
+
+export async function getPullRequestCommits(
+  owner: string,
+  repo: string,
+  pull_number: number
+) {
+  const { data } = await getGithubClient().rest.pulls.listCommits({
+    owner,
+    repo,
+    pull_number
+  })
+
+  return data
+}
+
+export async function getCommitPullRequests(
+  owner: string,
+  repo: string,
+  commit_sha: string
+) {
+  const { data } =
+    await getGithubClient().rest.repos.listPullRequestsAssociatedWithCommit({
+      owner,
+      repo,
+      commit_sha
+    })
+
+  return data
 }
 
 export function extractJiraKey(text: string) {
