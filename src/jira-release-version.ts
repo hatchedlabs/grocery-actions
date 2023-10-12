@@ -1,14 +1,19 @@
 import * as core from "@actions/core"
 import * as github from "@actions/github"
-import { parseGithubReleaseBody } from "./helpers/jira-release-version"
+import {
+  parseGithubReleaseBody,
+  jiraReleaseComment
+} from "./helpers/jira-release-version"
 import JiraApiHelper from "./jira/jira"
 
 try {
   ;(async function () {
     const jiraIssues = new Set<string>()
     let versionName = ""
+    let releaseUrl = ""
     if (github.context.payload.release) {
       versionName = github.context.payload.release.name
+      releaseUrl = github.context.payload.release.html_url
       const platform = core.getInput("platform")
       const service = core.getInput("service")
 
@@ -36,6 +41,8 @@ try {
       // Update Fix Version of Jira Issue to Version Name
       await jira.updateIssueVersion(issue.key, version.name)
       await jira.transitionIssue(issue, "CLOSED", "Done")
+      const jiraComment = jiraReleaseComment(versionName, releaseUrl)
+      await jira.client.addCommentAdvanced(issue.key, jiraComment)
     }
   })()
 } catch (e: any) {

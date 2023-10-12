@@ -52,3 +52,71 @@ export async function parsePullRequestCommits(
     }
   }
 }
+
+export function jiraReleaseComment(versionName: string, releaseUrl: string) {
+  return {
+    body: {
+      version: 1,
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            {
+              type: "text",
+              text: "This Jira Issue is currently in the Production Release Pipeline for "
+            },
+            {
+              type: "text",
+              text: versionName,
+              marks: [
+                {
+                  type: "strong"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: "paragraph",
+          content: [
+            {
+              type: "text",
+              text: "Github Release: "
+            },
+            {
+              type: "text",
+              text: releaseUrl,
+              marks: [
+                {
+                  type: "link",
+                  attrs: {
+                    href: releaseUrl
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: "paragraph",
+          content: [
+            {
+              type: "text",
+              text: "Note: ",
+              marks: [
+                {
+                  type: "strong"
+                }
+              ]
+            },
+            {
+              type: "text",
+              text: "If this was not intended to be released, please contact your PM."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
