@@ -1,5 +1,9 @@
 import { describe, expect, it } from "@jest/globals"
-import { extractJiraKey, extractJiraKeysFromPull } from "../src/github/github"
+import {
+  extractJiraKey,
+  extractJiraKeysFromPull,
+  getPullRequest
+} from "../src/github/github"
 
 describe("Github", function () {
   describe("extractJiraKey", function () {

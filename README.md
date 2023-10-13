@@ -30,6 +30,43 @@ This action checks
 - uses: hatchedlabs/grocery-actions/jira-status-check@main
 ```
 
+## Jira Release Version
+
+This action 
+- Checks the Github Release's Body for Jira Issues
+  - This will Check in the commit message and the associated PR Body
+  - Make sure the body has generated a changelog
+- Sets the Jira Issues' Fix Version to the Release name
+- Closes the Jira Issue. 
+
+### Example Usage
+
+```yaml
+name: Update Jira Tickets from Release
+
+on:
+  release:
+    types: [edited, released]
+
+jobs: 
+  release:
+    name: "Release"
+    if: |
+      contains(fromJson('["master", "main"]'), github.event.release.target_commitish) &&
+      github.event.release.prerelease == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Jira Unreleased
+        uses: hatchedlabs/grocery-actions/jira-release-version@mobile-jira-v2
+        with:
+          jira-server-url: company.atlassian.net
+          jira-user-email: user@jira.com
+          jira-api-token: ${{ secrets.JIRA_API_TOKEN }}
+          github-token: ${{ secrets.GH_API_TOKEN }}
+          platform: PLATFORM
+          service: TEST
+```
+
 ## Jira Move Unreleased
 
 This action
@@ -97,6 +134,8 @@ finds changed files in the most recent commit. Then from there, it can create mu
 > Note: The Jira API Token needs to access to all Jira Projects that this action is added to.
   Github Token needs access to the github repos this action is added to.
 # How to Create a new Action
+
+Make sure to install `ncc` to build and minify the javascript
 
 - Create a new folder within this repo
 - Create an actions.yml inside the created folder

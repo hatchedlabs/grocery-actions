@@ -1,7 +1,10 @@
 import * as github from "@actions/github"
 import { beforeAll, describe, it } from "@jest/globals"
 import {
-  getConfig, getJiraKeyFromPullRequest, getServices, run
+  getConfig,
+  getJiraKeyFromPullRequest,
+  getServices,
+  run
 } from "../src/helpers/jira-move-unreleased-helper"
 import { mockJira } from "./fixtures/jira"
 import { mockGithubContext, mockOctokit } from "./fixtures/octokit"
@@ -54,7 +57,7 @@ describe("jira-move-unreleased", function () {
   })
 
   describe("getServices", function () {
-    it("returns the 'service' input if provided", function() {
+    it("returns the 'service' input if provided", function () {
       process.env["INPUT_CHANGED-FILES"] = "testFolder/test.txt"
       const result = getServices(testConfig, "testService")
       expect(result).toContain("testService")

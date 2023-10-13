@@ -1,11 +1,12 @@
 import * as core from "@actions/core"
 import * as github from "@actions/github"
 import { readFileSync } from "fs"
-import {
-  extractJiraKeysFromPull,
-  getMergedPullRequest
-} from "../github/github.js"
-import JiraApiHelper from "../jira/jira.js"
+import { extractJiraKeysFromPull, getMergedPullRequest } from "../github/github"
+import JiraApiHelper from "../jira/jira"
+
+interface JiraActionConfig {
+  serviceFolderMap: { [id: string]: string }
+}
 
 export async function getJiraKeyFromPullRequest(): Promise<string | null> {
   // Grab the Merged Pull Request if Exists

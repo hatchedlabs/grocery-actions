@@ -3,22 +3,55 @@ import { jest } from "@jest/globals"
 
 export function mockOctokit({
   pullRequestTitle = "BLAH-1",
+  pullRequestNumber = 1,
   sha = "sha"
 }: {
   pullRequestTitle?: string
+  pullRequestNumber?: number
   sha?: string
 }) {
   jest.spyOn(github, "getOctokit").mockImplementation((): any => {
     return {
       rest: {
         pulls: {
+          get: jest.fn().mockReturnValue({
+            data: {
+              merge_commit_sha: sha,
+              title: pullRequestTitle,
+              body: `${pullRequestTitle} body`,
+              number: pullRequestNumber,
+              labels: [],
+              assignees: []
+            }
+          }),
           list: jest.fn().mockReturnValue({
             data: [
               {
                 merge_commit_sha: sha,
                 title: pullRequestTitle,
                 body: `${pullRequestTitle} body`,
-                number: 1,
+                number: pullRequestNumber,
+                labels: [],
+                assignees: []
+              }
+            ]
+          }),
+          listCommits: jest.fn().mockReturnValue({
+            data: [
+              {
+                sha
+              }
+            ]
+          })
+        },
+        repos: {
+          listPullRequestsAssociatedWithCommit: jest.fn().mockReturnValue({
+            data: [
+              {
+                merge_commit_sha: sha,
+                title: pullRequestTitle,
+                body: `${pullRequestTitle} body`,
+                number: pullRequestNumber,
                 labels: [],
                 assignees: []
               }

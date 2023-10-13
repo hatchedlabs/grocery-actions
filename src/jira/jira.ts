@@ -6,6 +6,7 @@ interface JiraApiParams {
   username: string
   password: string
 }
+
 export default class JiraApiHelper {
   client: JiraApi
 
@@ -32,10 +33,10 @@ export default class JiraApiHelper {
     const version = await this.getProjectVersionByName(project, name)
     if (!version) {
       const createdVersion = await this.client.createVersion({ project, name })
-      core.info(`Created Version '${name}' in '${project}'`)
+      core.info(`\tCreated Version '${name}' in '${project}'`)
       return createdVersion
     }
-    core.info(`Version '${name}' Already Exists in '${project}'`)
+    core.info(`\tVersion '${name}' Already Exists in '${project}'`)
     return version
   }
 
@@ -55,7 +56,7 @@ export default class JiraApiHelper {
         return { name: v.name }
       })
       if (issueVersions.some((v: any) => v.name === versionName)) {
-        core.info(`Fix Version '${versionName}' exists in '${issueKey}'`)
+        core.info(`\tFix Version '${versionName}' exists in '${issueKey}'`)
         return
       }
       issueVersions.push({ name: versionName })
@@ -65,12 +66,37 @@ export default class JiraApiHelper {
       fields: { fixVersions: issueVersions }
     })
     core.info(
-      `Updated '${issueKey}' with fixVersions:\n${JSON.stringify(
-        issueVersions,
-        null,
-        2
+      `\tUpdated '${issueKey}' with fixVersions: ${JSON.stringify(
+        issueVersions
       )}`
     )
     return issueVersions
+  }
+
+  async transitionIssue(
+    issue: any,
+    status: string,
+    resolution: string | undefined = undefined
+  ) {
+    const { transitions } = await this.client.listTransitions(issue.key)
+    const transition = transitions.find(
+      (t: any) => t.to.name.toLowerCase() === status.toLowerCase()
+    )
+    if (transition) {
+      const body: { [key: string]: any } = {
+        transition: { id: transition.id }
+      }
+      if (resolution && transition.hasScreen) {
+        body.fields = { resolution: { name: resolution } }
+      }
+      core.info(
+        `\tTransitioning ${issue.key} from '${
+          issue.fields.status.name
+        }' to '${status}' with body ${JSON.stringify(body)}`
+      )
+      await this.client.transitionIssue(issue.key, body)
+    } else {
+      core.info(`\tNo Valid Transition to ${status}`)
+    }
   }
 }
