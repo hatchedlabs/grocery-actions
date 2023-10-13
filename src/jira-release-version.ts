@@ -49,6 +49,7 @@ try {
           jira.contentAsText(c.body).includes(versionName)
       )
       if (!hasReleaseComment) {
+        core.info(`\tAdding Jira Comment with Version ${versionName}`)
         const jiraComment = jiraReleaseComment(versionName, releaseUrl)
         await jira.client.addCommentAdvanced(issue.key, jiraComment)
       } else {
