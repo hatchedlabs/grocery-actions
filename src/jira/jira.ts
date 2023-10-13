@@ -78,6 +78,9 @@ export default class JiraApiHelper {
     status: string,
     resolution: string | undefined = undefined
   ) {
+    if (issue.fields.status.name.toLowerCase() === status.toLowerCase()) {
+      core.info(`\tIssue Status is already ${status}`)
+    }
     const { transitions } = await this.client.listTransitions(issue.key)
     const transition = transitions.find(
       (t: any) => t.to.name.toLowerCase() === status.toLowerCase()
@@ -98,5 +101,35 @@ export default class JiraApiHelper {
     } else {
       core.info(`\tNo Valid Transition to ${status}`)
     }
+  }
+
+  // Aggregates the Jira Coment Object into Plain Text
+  contentAsText(json: any) {
+    let text = ""
+
+    // Keep track of the previous node type
+    let previousNodeType: any = null
+
+    // Iterate through all content
+    json.content.forEach((content: any) => {
+      // If the content has "text" property, append it to the string with or without a newline character
+      if (content.hasOwnProperty("text")) {
+        // Check if the current node type is the same as the previous node type
+        if (content.type === previousNodeType) {
+          text += content.text
+        } else {
+          text += "\n" + content.text
+        }
+
+        // Update the previous node type
+        previousNodeType = content.type
+      }
+      // If the content has "content" property, recurse through it
+      if (content.hasOwnProperty("content")) {
+        text += this.contentAsText(content)
+      }
+    })
+
+    return text
   }
 }

@@ -8,6 +8,7 @@ import JiraApiHelper from "./jira/jira"
 
 try {
   ;(async function () {
+    const currentJiraUserEmail = core.getInput("jira-user-email")
     const jiraIssues = new Set<string>()
     let versionName = ""
     let releaseUrl = ""
@@ -41,8 +42,16 @@ try {
       // Update Fix Version of Jira Issue to Version Name
       await jira.updateIssueVersion(issue.key, version.name)
       await jira.transitionIssue(issue, "CLOSED", "Done")
-      const jiraComment = jiraReleaseComment(versionName, releaseUrl)
-      await jira.client.addCommentAdvanced(issue.key, jiraComment)
+
+      const hasReleaseComment = issue.fields.comment.comments.some(
+        (c: any) =>
+          c.author.emailAddress == currentJiraUserEmail &&
+          jira.contentAsText(c.body).includes(versionName)
+      )
+      if (!hasReleaseComment) {
+        const jiraComment = jiraReleaseComment(versionName, releaseUrl)
+        await jira.client.addCommentAdvanced(issue.key, jiraComment)
+      }
     }
   })()
 } catch (e: any) {
