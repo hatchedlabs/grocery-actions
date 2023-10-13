@@ -51,6 +51,8 @@ try {
       if (!hasReleaseComment) {
         const jiraComment = jiraReleaseComment(versionName, releaseUrl)
         await jira.client.addCommentAdvanced(issue.key, jiraComment)
+      } else {
+        core.info(`\tJira Comment with Version ${versionName} already exists`)
       }
     }
   })()

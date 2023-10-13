@@ -80,6 +80,7 @@ export default class JiraApiHelper {
   ) {
     if (issue.fields.status.name.toLowerCase() === status.toLowerCase()) {
       core.info(`\tIssue Status is already ${status}`)
+      return
     }
     const { transitions } = await this.client.listTransitions(issue.key)
     const transition = transitions.find(
