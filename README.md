@@ -87,8 +87,7 @@ The config file is in the format of:
 }
 ```
 
-This allows the action to work with monorepos with multiple services. This can be paired with the `tj-actions/changed-files@v35` action, which
-finds changed files in the most recent commit. Then from there, it can create multiple releases and append them onto the related Jira issue. 
+This allows the action to work with monorepos with multiple services. 
 
 ### Example Usage
 
@@ -115,9 +114,6 @@ finds changed files in the most recent commit. Then from there, it can create mu
 - uses: actions/checkout@v3
   with:
     fetch-depth: 0
-- name: Get changed files
-  id: changed-files
-  uses: tj-actions/changed-files@v35
   
 - name: Run Jira Unreleased
   uses: hatchedlabs/grocery-actions/jira-move-unreleased@main
@@ -128,7 +124,7 @@ finds changed files in the most recent commit. Then from there, it can create mu
     github-token: ${{ secrets.REPO_TOKEN }}
     platform: Android
     config-file-path: ./.github/workflows/jira-action-config.json
-    changed-files: ${{ steps.changed-files.outputs.all_changed_files }}
+    changed-files: <LIST OF CHANGED FILES>
 ```
 
 > Note: The Jira API Token needs to access to all Jira Projects that this action is added to.
